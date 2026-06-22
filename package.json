@@ -1,22 +1,22 @@
 {
-  "name": "sos2526-17",
+  "name": "sos2526-jul-fmm",
   "version": "0.0.8",
   "description": "Our project is going to analyse the impact of water and renewable energy on agricultural productivity in the countries",
-  "homepage": "https://github.com/gti-sos/SOS2526-17#readme",
+  "homepage": "https://github.com/gti-sos/sos2526-jul-fmm#readme",
   "bugs": {
-    "url": "https://github.com/gti-sos/SOS2526-17/issues"
+    "url": "https://github.com/gti-sos/sos2526-jul-fmm/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gti-sos/SOS2526-17.git"
+    "url": "git+https://github.com/gti-sos/sos2526-jul-fmm.git"
   },
   "license": "GPL",
-  "author": "SOS2526-17",
+  "author": "sos2526-jul-fmm",
   "type": "module",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "postinstall": "npm install --prefix src/front && npm run build --prefix src/front",
-    "start": "node index.js",
+    "start": "node src/index.js",
     "build": "npm install --prefix src/front && npm run build --prefix src/front",
     "dev-front": "cd src/front && npm run dev -- --open",
     "test-all-apis": "npm run test-agriculture-land && npm run test-water-productivities && npm run test-renewable-energy-consumptions  --reporters cli",
