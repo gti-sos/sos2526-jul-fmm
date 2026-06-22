@@ -1,7 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import path from 'path'; // 1. Añade esto arriba del todo
+import path from 'path';
 
 import { loadBackendFMM, loadBackendFMM_v2, loadIntegrationsProxy } from './api-fmm.js';
 
@@ -11,10 +11,9 @@ const port = process.env.PORT || 3000;
 app.use(bodyParser.json());
 app.use(cors());
 
-// 2. Añade esta línea para que Express sirva los archivos de Svelte
-// (Dependiendo de cómo instales Svelte, la carpeta será 'public', 'dist' o 'build')
+// Servir los archivos estáticos del frontend de Svelte (generados en la carpeta dist por Vite)
 const __dirname = path.resolve();
-app.use(express.static(path.join(__dirname, 'src', 'front', 'public'))); 
+app.use(express.static(path.join(__dirname, 'src', 'front', 'dist'))); 
 
 loadBackendFMM(app);
 loadBackendFMM_v2(app);
