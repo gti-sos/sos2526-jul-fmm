@@ -1,0 +1,1 @@
+export { default as component } from "../../../../src/routes/agriculture-land/country/year/+page.svelte";
