@@ -1,7 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import { handler } from './src/front/build/handler.js';
+import { handler } from './front/build/handler.js';
 import { loadBackendFMM, loadBackendFMM_v2, loadIntegrationsProxy } from './api-fmm.js';
 
 const app = express();
