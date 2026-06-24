@@ -29,20 +29,23 @@ declare module "$app/types" {
 	type MatcherParam<M> = M extends (param : string) => param is (infer U extends string) ? U : string;
 
 	export interface AppTypes {
-		RouteId(): "/" | "/about" | "/agriculture-land" | "/agriculture-land/country" | "/agriculture-land/country/year" | "/analytics" | "/integrations";
+		RouteId(): "/" | "/about" | "/agriculture-land" | "/agriculture-land/[country]" | "/agriculture-land/[country]/[year]" | "/analytics" | "/analytics/agriculture-land" | "/analytics/agriculture-land/map" | "/integrations";
 		RouteParams(): {
-			
+			"/agriculture-land/[country]": { country: string };
+			"/agriculture-land/[country]/[year]": { country: string; year: string }
 		};
 		LayoutParams(): {
-			"/": Record<string, never>;
+			"/": { country?: string | undefined; year?: string | undefined };
 			"/about": Record<string, never>;
-			"/agriculture-land": Record<string, never>;
-			"/agriculture-land/country": Record<string, never>;
-			"/agriculture-land/country/year": Record<string, never>;
+			"/agriculture-land": { country?: string | undefined; year?: string | undefined };
+			"/agriculture-land/[country]": { country: string; year?: string | undefined };
+			"/agriculture-land/[country]/[year]": { country: string; year: string };
 			"/analytics": Record<string, never>;
+			"/analytics/agriculture-land": Record<string, never>;
+			"/analytics/agriculture-land/map": Record<string, never>;
 			"/integrations": Record<string, never>
 		};
-		Pathname(): "/" | "/about" | "/agriculture-land" | "/agriculture-land/country/year" | "/analytics" | "/integrations";
+		Pathname(): "/" | "/about" | "/agriculture-land" | `/agriculture-land/${string}/${string}` & {} | "/analytics/agriculture-land" | "/analytics/agriculture-land/map" | "/integrations";
 		ResolvedPathname(): `${"" | `/${string}`}${ReturnType<AppTypes['Pathname']>}`;
 		Asset(): string & {};
 	}
