@@ -1,11 +1,9 @@
 <script>
     import { onMount } from 'svelte';
 
-    // Instancia global de Highcharts protegida contra fallos de ejecución en servidor (SSR)
     let Highcharts = $state(null);
 
     const integrations = [
-        // 1. MI API PROPIA (Base para las mixtas)
         {
             id: 'agriculture-self',
             title: 'Mi API: Agriculture Land',
@@ -15,7 +13,6 @@
             columns: ['country', 'year', 'land_agriculture', 'index'],
             accent: '#84a59d'
         },
-        // 2. SOS G23 (Gráfica de Líneas)
         {
             id: 'g23-stock',
             title: 'API G23: Stock Market',
@@ -25,7 +22,6 @@
             columns: ['region', 'date', 'open', 'high'], 
             accent: '#6c5ce7'
         },
-        // 3. SOS G25 (Tabla)
         {
             id: 'g25-tourists',
             title: 'API G25: Tourist Arrivals',
@@ -35,7 +31,6 @@
             columns: ['country', 'year', 'air_arrival', 'water_arrival'],
             accent: '#d4a373'
         },
-        // 4. POKEMON (Gráfica de Tarta)
         {
             id: 'ext-pokemon',
             title: 'PokeAPI (Directa - Prueba)',
@@ -45,27 +40,24 @@
             columns: ['name', 'url'],
             accent: '#ff7675'
         },
-        // 5. PAÍSES (Tabla)
         {
-            id: 'ext-paises',
-            title: 'Datos de Países',
+            id: 'ext-population',
+            title: 'Población Histórica EE.UU. (Gráfica)',
             type: 'Externa No SOS',
-            fetchUrl: 'https://restcountries.com/v3.1/all?fields=name,capital,region',
-            apiUrl: 'https://restcountries.com/v3.1/all',
-            columns: ['name', 'capital', 'region'],
+            fetchUrl: 'https://datausa.io/api/data?drilldowns=Nation&measures=Population',
+            apiUrl: 'https://datausa.io/api/data?drilldowns=Nation&measures=Population',
+            columns: ['Year', 'Population'],
             accent: '#fdcb6e'
         },
-        // 6. UNIVERSIDADES (Tabla)
         {
-            id: 'ext-universities',
-            title: 'Universidades España',
+            id: 'ext-digimon',
+            title: 'Catálogo Digimon',
             type: 'Externa No SOS',
-            fetchUrl: 'http://universities.hipolabs.com/search?country=Spain&limit=5',
-            apiUrl: 'http://universities.hipolabs.com/search?country=Spain',
-            columns: ['name', 'domains'], 
+            fetchUrl: 'https://digimon-api.vercel.app/api/digimon',
+            apiUrl: 'https://digimon-api.vercel.app/api/digimon',
+            columns: ['name', 'level'], 
             accent: '#55efc4'
         },
-        // 7. RICK & MORTY (Tabla)
         {
             id: 'ext-rickmorty',
             title: 'Rick & Morty: Personajes',
@@ -75,7 +67,6 @@
             columns: ['name', 'status', 'species'],
             accent: '#e84393'
         },
-        // 8. JSONPLACEHOLDER POSTS (Tabla)
         {
             id: 'ext-posts',
             title: 'JSONPlaceholder: Publicaciones',
@@ -85,7 +76,6 @@
             columns: ['id', 'title', 'body'],
             accent: '#00cec9'
         },
-        // 9. FAKESTORE PRODUCTS (Tabla)
         {
             id: 'ext-products',
             title: 'FakeStore: Productos Ecommerce',
@@ -95,7 +85,6 @@
             columns: ['id', 'title', 'price', 'category'],
             accent: '#ffb8b8'
         },
-        //  10
         {
             id: 'mixed-currency',
             title: 'Gráfica Mixta: Moneda USD vs  Tierras',
@@ -105,7 +94,6 @@
             columns: ['currency', 'rate'],
             accent: '#0984e3'
         },
-        //  NUEVA 11: MIXTA 
         {
             id: 'mixed-users',
             title: 'Gráfica Mixta: Volumen Usuarios vs  Tierras',
@@ -115,7 +103,6 @@
             columns: ['id', 'name', 'username'],
             accent: '#2ecc71'
         },
-        //  NUEVA 12: MIXTA 
         {
             id: 'mixed-todos',
             title: 'Gráfica Mixta: Tareas Externas vs  Índice',
@@ -160,7 +147,6 @@
                 if (Array.isArray(data)) {
                     finalRows = data;
                 } else if (data && data.rates) {
-                    // Adaptador para la API de monedas que devuelve un objeto plano
                     finalRows = Object.entries(data.rates).slice(0, 5).map(([key, val]) => ({ currency: key, rate: val }));
                 } else if (data && data.results && Array.isArray(data.results)) {
                     finalRows = data.results; 
@@ -185,11 +171,9 @@
         }
     }
 
-    // Constructor dinámico de gráficos en cliente
     function initChart(node, card) {
         if (!Highcharts || !card.rows || card.rows.length === 0) return;
 
-        // Extraemos los datos cargados en la primera tarjeta (Tu API propia)
         const myApiData = cards[0]?.rows || [];
         const categoriesCountries = myApiData.map(r => r.country || 'País');
 
@@ -236,7 +220,20 @@
                 }]
             });
         }
-        // 🔄 GRÁFICA MIXTA 10
+        else if (card.id === 'ext-population') {
+            Highcharts.chart(node, {
+                chart: { type: 'area', backgroundColor: 'transparent' },
+                title: { text: null },
+                xAxis: { categories: card.rows.map(r => r.Year).reverse() },
+                yAxis: { title: { text: 'Habitantes' } },
+                credits: { enabled: false },
+                series: [{
+                    name: 'Población Total',
+                    data: card.rows.map(r => parseInt(r.Population)).reverse(),
+                    color: card.accent
+                }]
+            });
+        }
         else if (card.id === 'mixed-currency') {
             Highcharts.chart(node, {
                 chart: { backgroundColor: 'transparent' },
@@ -253,7 +250,6 @@
                 ]
             });
         }
-        // 🔄 GRÁFICA MIXTA 11
         else if (card.id === 'mixed-users') {
             Highcharts.chart(node, {
                 chart: { backgroundColor: 'transparent' },
@@ -270,7 +266,6 @@
                 ]
             });
         }
-        // 🔄 GRÁFICA MIXTA 12
         else if (card.id === 'mixed-todos') {
             Highcharts.chart(node, {
                 chart: { backgroundColor: 'transparent' },
@@ -296,7 +291,7 @@
 <main>
     <header class="main-header">
         <div class="header-content">
-            <h1>Data Hub <span class="group-tag">Grupo 17</span></h1>
+            <h1>Data Hub</h1>
             <p>Panel Avanzado: APIs independientes y Gráficas de datos cruzados en Svelte 5</p>
         </div>
         <div class="nav-buttons">
@@ -323,7 +318,7 @@
                     {:else if card.error}
                         <div class="error-box">{card.error}</div>
                     {:else}
-                        {#if ['agriculture-self', 'g23-stock', 'ext-pokemon', 'mixed-currency', 'mixed-users', 'mixed-todos'].includes(card.id)}
+                        {#if ['agriculture-self', 'g23-stock', 'ext-pokemon', 'ext-population', 'mixed-currency', 'mixed-users', 'mixed-todos'].includes(card.id)}
                             <div class="chart-box" use:initChart={card}></div>
                         {:else}
                             <div class="table-container">
@@ -390,16 +385,6 @@
     .main-header p {
         color: #5b665f;
         margin-top: 8px;
-    }
-
-    .group-tag {
-        font-size: 0.9rem;
-        background: #e7efe9;
-        color: #35594a;
-        padding: 4px 12px;
-        border-radius: 6px;
-        vertical-align: middle;
-        margin-left: 10px;
     }
 
     .nav-buttons {
