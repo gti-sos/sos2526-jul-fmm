@@ -71,7 +71,7 @@
             </li>
             <li>
                 <strong>Defensa del Proyecto:</strong> 
-                <a href="https://www.youtube.com/watch?v=rSqIDwWOqgs" target="_blank" rel="noopener noreferrer">Vídeo Explicativo en YouTube</a>
+                <a href="https://www.youtube.com/watch?v=5NrWEROkUdc" target="_blank" rel="noopener noreferrer">Vídeo Explicativo en YouTube</a>
             </li>
         </ul>
     </section>
